@@ -33,8 +33,8 @@ GCCbPath="${MainGCCbPath}"
 
 # Identity
 VERSION=4.9.337
-KERNELNAME=Bloodmoon
-CODENAME=Rebase
+KERNELNAME=TheOneMemory
+CODENAME=RMX1971
 VARIANT=EAS
 
 # Show manufacturer info
@@ -148,11 +148,10 @@ function finerr() {
 }
 # Zipping
 function zipping() {
-cd AnyKernel || exit 1
+    cd AnyKernel
+    zip -r9 $KERNELNAME-$CODENAME-"$DATE" . -x ".git*" -x "README.md" -x "./*placeholder" "*.zip"
 
-    zip -r9 $KERNELNAME-Solifice-$VARIANT-"$DATE" . -x ".git*" -x "README.md" -x "./*placeholder" "*.zip"
-
-    ZIP_FINAL="$KERNELNAME-$VARIANT-$DATE"
+    ZIP_FINAL="$KERNELNAME-$CODENAME-$DATE"
 
     msg "|| Signing Zip ||"
     tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
@@ -162,6 +161,7 @@ cd AnyKernel || exit 1
     ZIP_FINAL="$ZIP_FINAL-signed"
     cd ..
 }
+
 compile
 zipping
 END=$(date +"%s")
