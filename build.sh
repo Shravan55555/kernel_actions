@@ -32,16 +32,16 @@ GCCaPath="${MainGCCaPath}"
 GCCbPath="${MainGCCbPath}"
 
 # Identity
-VERSION=4.4.302
-KERNELNAME=SkyWalker
-CODENAME=Hayzel
+VERSION=4.9.337
+KERNELNAME=Bloodmoon
+CODENAME=Rebase
 VARIANT=EAS
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
 # Clone Kernel Source
-git clone --depth=1 --recursive https://github.com/strongreasons/android_kernel_asus_sdm660 -b test kernel
+git clone --depth=1 https://github.com/strongreasons/android_kernel_realme_sdm710 kernel
 
 # Clone Snapdragon Clang
 ClangPath=${MainClangPath}
@@ -91,7 +91,7 @@ cd ${KERNEL_ROOTDIR}
 msg "|| Cooking kernel. . . ||"
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
-make -j$(nproc) O=out ARCH=arm64 X00TD_defconfig
+make -j$(nproc) O=out ARCH=arm64 sdm670-perf_defconfig
 make -j$(nproc) ARCH=arm64 SUBARCH=arm64 O=out \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
     CC=clang \
@@ -107,7 +107,7 @@ make -j$(nproc) ARCH=arm64 SUBARCH=arm64 O=out \
    fi
 
    msg "|| Cloning AnyKernel ||"
-   git clone --depth=1 https://github.com/Tiktodz/AnyKernel3 -b eas AnyKernel
+   git clone --depth=1 https://github.com/kaderbava/AnyKernel3 AnyKernel
 	cp $IMAGE AnyKernel
 }
 # Push kernel to telegram
@@ -149,37 +149,10 @@ function finerr() {
 # Zipping
 function zipping() {
 cd AnyKernel || exit 1
-#cp -af $KERNEL_DIR/init.$CODENAME.Spectrum.rc spectrum/init.spectrum.rc && sed -i "s/persist.spectrum.kernel.*/persist.spectrum.kernel TheOneMemory/g" spectrum/init.spectrum.rc
-#cp -af $KERNEL_DIR/changelog META-INF/com/google/android/aroma/changelog.txt
-cp -af anykernel-real.sh anykernel.sh
-sed -i "s/kernel.string=.*/kernel.string=$KERNELNAME/g" anykernel.sh
-sed -i "s/kernel.type=.*/kernel.type=$VARIANT/g" anykernel.sh
-sed -i "s/kernel.for=.*/kernel.for=$CODENAME/g" anykernel.sh
-sed -i "s/kernel.compiler=.*/kernel.compiler=$KBUILD_COMPILER_STRING/g" anykernel.sh
-sed -i "s/kernel.made=.*/kernel.made=dotkit @fakedotkit/g" anykernel.sh
-sed -i "s/kernel.version=.*/kernel.version=$VERSION/g" anykernel.sh
-sed -i "s/message.word=.*/message.word=Appreciate your efforts for choosing TheOneMemory kernel./g" anykernel.sh
-sed -i "s/build.date=.*/build.date=$DATE/g" anykernel.sh
-sed -i "s/build.type=.*/build.type=$CODENAME/g" anykernel.sh
-sed -i "s/supported.versions=.*/supported.versions=9-13/g" anykernel.sh
-sed -i "s/device.name1=.*/device.name1=X00TD/g" anykernel.sh
-sed -i "s/device.name2=.*/device.name2=X00T/g" anykernel.sh
-sed -i "s/device.name3=.*/device.name3=Zenfone Max Pro M1 (X00TD)/g" anykernel.sh
-sed -i "s/device.name4=.*/device.name4=ASUS_X00TD/g" anykernel.sh
-sed -i "s/device.name5=.*/device.name5=ASUS_X00T/g" anykernel.sh
-sed -i "s/X00TD=.*/X00TD=1/g" anykernel.sh
-cd META-INF/com/google/android
-sed -i "s/KNAME/$KERNELNAME/g" aroma-config
-sed -i "s/KVER/$VERSION/g" aroma-config
-sed -i "s/KAUTHOR/dotkit @fakedotkit/g" aroma-config
-sed -i "s/KDEVICE/Zenfone Max Pro M1/g" aroma-config
-sed -i "s/KBDATE/$DATE/g" aroma-config
-sed -i "s/KVARIANT/$VARIANT/g" aroma-config
-cd ../../../..
 
     zip -r9 $KERNELNAME-Solifice-$VARIANT-"$DATE" . -x ".git*" -x "README.md" -x "./*placeholder" "*.zip"
 
-    ZIP_FINAL="$KERNELNAME-Solifice-$VARIANT-$DATE"
+    ZIP_FINAL="$KERNELNAME-$VARIANT-$DATE"
 
     msg "|| Signing Zip ||"
     tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
