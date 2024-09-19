@@ -34,7 +34,7 @@ GCCbPath="${MainGCCbPath}"
 # Identity
 VERSION=4.9.337
 KERNELNAME=TheOneMemory
-CODENAME=RMX1971
+CODENAME=RMX1901
 VARIANT=EAS
 
 # Show manufacturer info
@@ -107,7 +107,7 @@ make -j$(nproc) ARCH=arm64 SUBARCH=arm64 O=out \
    fi
 
    msg "|| Cloning AnyKernel ||"
-   git clone --depth=1 https://github.com/kaderbava/AnyKernel3 AnyKernel
+   git clone --depth=1 https://github.com/Shravan55555/AnyKernel3 AnyKernel
 	cp $IMAGE AnyKernel
 }
 # Push kernel to telegram
